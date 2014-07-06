@@ -42,8 +42,11 @@ class msLinkRemoveProcessor extends modObjectRemoveProcessor  {
 		$q->where(array('link' => $link));
 		switch ($type) {
 			case 'many_to_many':
+			    $q->where(array('master' => $slave, 'OR:slave:=' => $slave));
+			break;
+			
 			case 'one_to_one':
-				$q->where(array('master' => $slave, 'OR:slave:=' => $slave));
+			    $q->where(array(array('master' => $master, 'AND:slave:=' => $slave),array('master' => $slave, 'AND:slave:=' => $master) ),xPDOQuery::SQL_OR );
 			break;
 
 			case 'many_to_one':
